@@ -3,27 +3,54 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from utility_functions import Conv_coordinates
 
-# -------------------------------------  Calculate Coordinates of MEG sensors ------------------------------------------
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+# ---------------------- Calculate Coordinates of MEG sensors -----------------------
 
 # TODO: Define the number of MEG sensors
-# num_points = ...
+# تعداد کل حسگرها ۳۳ عدد است
+num_points = 33
 
 # TODO: Define theta angles for all sensors (zenith angle)
 # First sensor at zenith (0°), then 4 sensors at each of the 8 longitudinal strips
-# theta_degrees = ...
+# و TODO: Define phi angles for all sensors (azimuthal angle)
+# آرایه‌های خالی برای نگهداری زوایای تتا و فی به درجه ایجاد می‌شود
+theta_degrees = np.zeros(num_points)
+phi_degrees = np.zeros(num_points)
 
-# TODO: Define phi angles for all sensors (azimuthal angle)
-# phi_degrees = ...
+# حسگر اول در راس (زاویه تتا = 0) قرار دارد. زاویه فی برای آن مهم نیست.
+theta_degrees[0] = 0
+phi_degrees[0] = 0
+
+# محاسبه زوایا برای ۳۲ حسگر باقی‌مانده بر اساس ۸ نوار طولی و ۴ حسگر در هر نوار
+# i نماینده شماره نوار (از ۰ تا ۷) و j نماینده شماره حسگر در هر نوار (از ۱ تا ۴) است.
+for i in range(8):
+    for j in range(1, 5):
+        # شماره حسگر بر اساس فرمول 4i + j + 1 محاسبه می‌شود
+        sensor_number = 4 * i + j + 1
+        # شاخص آرایه یکی کمتر از شماره حسگر است
+        index = sensor_number - 1
+        
+        # زاویه تتا بر اساس موقعیت حسگر در نوار تعیین می‌شود
+        theta_degrees[index] = j * 22.5
+        # زاویه فی بر اساس شماره نوار تعیین می‌شود
+        phi_degrees[index] = i * 45
 
 # TODO: Convert degrees to radians for calculations
-# theta = ...
-# phi = ...
+# تبدیل زوایای تتا و فی از درجه به رادیان برای استفاده در محاسبات مثلثاتی
+theta = np.deg2rad(theta_degrees)
+phi = np.deg2rad(phi_degrees)
 
 # TODO: Convert spherical coordinates to Cartesian coordinates
-# radius = ...
-# x, y, z = ...
+# شعاع کره (پوست سر) ۰.۰۹ متر است
+radius = 0.09
+# استفاده از تابع کمکی برای تبدیل مختصات کروی به دکارتی (x, y, z)
+x, y, z = Conv_coordinates(phi, theta, radius)
 
 # TODO: Save the calculated sensor coordinates to a file for later use
+# ذخیره مختصات محاسبه‌شده در یک فایل .npz برای استفاده در تسک‌های بعدی
 np.savez("sensor_coordinates.npz", x=x, y=y, z=z)
 
 
