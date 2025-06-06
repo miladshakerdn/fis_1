@@ -7,27 +7,30 @@ from utility_functions import Calc_G
 # -----------------------------  Loading Dipole, MEG sensor and Unit vector Cordinates------------------------------------
 
 # TODO: Load the coordinate data files for dipoles, sensors and unit vectors
-# data1 = 
-# data2 = 
-# data3 = 
+data1 = np.load("Dipole_coordinates.npz")
+data2 = np.load("sensor_coordinates.npz")
+data3 = np.load("Unit_Vect_coordinates.npz")
 
 # TODO: Extract and organize dipole coordinates into array
-# rq_x = 
-# rq_y = 
-# rq_z = 
-# rq = 
+# استخراج و سازماندهی مختصات دوقطبی‌ها در یک آرایه (105, 3)
+rq_x = data1['x']
+rq_y = data1['y']
+rq_z = data1['z']
+rq = np.vstack((rq_x, rq_y, rq_z)).T
 
 # TODO: Extract and organize sensor coordinates into array
-# r_x = 
-# r_y = 
-# r_z = 
-# r = 
+# استخراج و سازماندهی مختصات حسگرها در یک آرایه (33, 3)
+r_x = data2['x']
+r_y = data2['y']
+r_z = data2['z']
+r = np.vstack((r_x, r_y, r_z)).T
 
 # TODO: Extract and organize unit vectors into array
-# er_x = 
-# er_y = 
-# er_z = 
-# er = 
+# استخراج و سازماندهی بردارهای واحد حسگرها در یک آرایه (33, 3)
+er_x = data3['ex']
+er_y = data3['ey']
+er_z = data3['ez']
+er = np.vstack((er_x, er_y, er_z)).T
 
 # -----------------------------------------------  Constants ---------------------------------------------------------
 
@@ -49,13 +52,29 @@ mu = 4 * math.pi * pow(10, -7)
 # -----------------------------------------  Calculate Lead Field Matrix -----------------------------------------
 
 # TODO: Initialize the lead field matrix G
-# G = 
+# ایجاد یک ماتریس صفر با ابعاد ۳۳ در ۱۰۵ برای نگهداری نتایج
+G = np.zeros((m, n))
 
 # TODO: Calculate lead field matrix components
-# for i in range(m):
-#     k = 0
-#     for j in range(n):
-#         ...
+# برای محاسبه ماتریس G، باید یک جهت‌گیری (گشتاور) برای هر دوقطبی فرض کنیم.
+# از آنجایی که MEG به منابع مماسی (tangential) حساس‌تر است،
+# یک گشتاور مماسی واحد (مثلاً در جهت x) برای همه دوقطبی‌ها فرض می‌کنیم.
+q_canonical = np.array([1, 0, 0])
+
+# محاسبه درایه‌های ماتریس G با دو حلقه تو در تو
+for i in range(m):      # حلقه روی هر حسگر
+    for j in range(n):  # حلقه روی هر دوقطبی
+        
+        # بردار فاصله از منبع دوقطبی تا حسگر
+        R_vec = r[i] - rq[j]
+        R_norm = np.linalg.norm(R_vec)
+        
+        # محاسبه میدان مغناطیسی با استفاده از فرمول ساده‌شده بیو-ساوار برای دوقطبی
+        # B = (mu/4pi) * (q x R) / |R|^3
+        B_vec = (mu / (4 * np.pi)) * (np.cross(q_canonical, R_vec)) / (R_norm**3)
+        
+        # جزء شعاعی میدان مغناطیسی، ضرب داخلی بردار میدان در بردار واحد شعاعی حسگر است
+        G[i, j] = np.dot(B_vec, er[i])
 
 # -------------------------------------  Visiualize G[:, 75] ----------------------------------------------
 
