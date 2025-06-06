@@ -4,30 +4,37 @@ import numpy as np
 from utility_functions import sorted, Conv_coordinates
 
 
-# -------------------------------------  Calculate Coordinates of Diapole  ------------------------------------------
+# ---------------------- Calculate Coordinates of Diapole -----------------------
+
 # TODO: Define the number of dipole sources to generate
-# num_points = 
+# تعداد منابع دوقطبی ۱۰۵ عدد است
+num_points = 105
 
 # TODO: Initialize a random number generator with the default algorithm
-# rng = 
+# یک مولد عدد تصادفی برای تولید مقادیر یکنواخت ایجاد می‌شود
+rng = np.random.default_rng()
 
 # TODO: Generate random theta values (polar angle) between 0 and π
-# theta = 
+# تولید ۱۰۵ زاویه تتا به صورت تصادفی و یکنواخت بین ۰ و پی برای پوشش کل کره
+theta = rng.uniform(0, np.pi, num_points)
 
 # TODO: Generate random phi values (azimuthal angle) between 0 and 2π
-# phi = 
+# تولید ۱۰۵ زاویه فی به صورت تصادفی و یکنواخت بین ۰ و دو پی
+phi = rng.uniform(0, 2 * np.pi, num_points)
 
-# TODO
-# radius =  # radius of the hemisphere in meters
-
-# TODO: Convert spherical coordinates to Cartesian coordinates using utility_functions
-# x, y, z = 
+# TODO: Convert spherical coordinates to Cartesian coordinates
+# شعاع کره ۷ سانتی‌متر (۰.۰۷ متر) است
+radius = 0.07  # radius of the sphere in meters
+# تبدیل مختصات کروی تولید شده به مختصات دکارتی
+x, y, z = Conv_coordinates(phi, theta, radius)
 
 # TODO: Sort the dipole coordinates based on distance from z-axis
-# x_sorted, y_sorted, z_sorted = 
+# مرتب‌سازی دوقطبی‌ها بر اساس فاصله از محور z با استفاده از تابع کمکی
+x_sorted, y_sorted, z_sorted = sorted(x, y, z)
 
+# ذخیره مختصات مرتب‌شده دوقطبی‌ها در یک فایل برای استفاده‌های بعدی
 np.savez("Dipole_coordinates.npz", x=x_sorted, y=y_sorted, z=z_sorted)
-print(x_sorted.shape)  # Should output (105,)
+print(x_sorted.shape)  # خروجی باید (105,) باشد
 
 # -------------------------------------  Visiualize Diapole  ------------------------------------------
 
