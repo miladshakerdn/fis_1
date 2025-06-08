@@ -29,7 +29,7 @@ r, theta, phi = cartesian_to_polar(r_x, r_y, r_z)
 # -----------------------------------------------  Constants ---------------------------------------------------------
 
 m = 33       # Number of EEG Sensor
-n = 105      # Number of Dipole
+n = 104      # Number of Dipole
 R0 = 0.07    # Dipole sphere radius (not used directly in formula, r_0 is used)
 R1 = 0.08    # Brain radius
 R2 = 0.085   # Skull radius

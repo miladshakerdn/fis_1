@@ -8,7 +8,7 @@ from utility_functions import sorted, Conv_coordinates
 
 # TODO: Define the number of dipole sources to generate
 # تعداد منابع دوقطبی ۱۰۵ عدد است
-num_points = 105
+num_points = 104
 
 # TODO: Initialize a random number generator with the default algorithm
 # یک مولد عدد تصادفی برای تولید مقادیر یکنواخت ایجاد می‌شود
